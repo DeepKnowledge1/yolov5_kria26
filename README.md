@@ -21,6 +21,19 @@ The deployment flow includes:
 
 ---
 
+## 🎥 Live Demo
+
+<p align="center">
+  <a href="https://youtu.be/vi2XgS4sPvo">
+    <img src="https://img.youtube.com/vi/vi2XgS4sPvo/maxresdefault.jpg" width="800" alt="YOLOv5 on KRIA KV260 Demo">
+  </a>
+</p>
+
+<p align="center">
+  <b>▶ Click the thumbnail to watch the full deployment demo</b>
+</p>
+
+
 ## 🏗️ Hardware
 
 ### Target Platform
