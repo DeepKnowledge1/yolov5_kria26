@@ -61,7 +61,8 @@ class MixConv2d(nn.Module):
             [nn.Conv2d(c1, int(c_), k, s, k // 2, groups=math.gcd(c1, int(c_)), bias=False) for k, c_ in zip(k, c_)]
         )
         self.bn = nn.BatchNorm2d(c2)
-        self.act = nn.SiLU()
+        # self.act = nn.SiLU()
+        self.act = nn.LeakyReLU(0.1, inplace=True)
 
     def forward(self, x):
         """Performs forward pass by applying SiLU activation on batch-normalized concatenated convolutional layer

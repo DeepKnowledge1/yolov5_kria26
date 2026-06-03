@@ -193,7 +193,8 @@ class BottleneckCSP(nn.Module):
         self.cv3 = nn.Conv2d(c_, c_, 1, 1, bias=False)
         self.cv4 = Conv(2 * c_, c2, 1, 1)
         self.bn = nn.BatchNorm2d(2 * c_)  # applied to cat(cv2, cv3)
-        self.act = nn.SiLU()
+        # self.act = nn.SiLU()
+        self.act = nn.LeakyReLU(0.1, inplace=True)
         self.m = nn.Sequential(*(Bottleneck(c_, c_, shortcut, g, e=1.0) for _ in range(n)))
 
     def forward(self, x):
@@ -468,13 +469,14 @@ class DetectMultiBackend(nn.Module):
         #   TensorFlow Lite:                *.tflite
         #   TensorFlow Edge TPU:            *_edgetpu.tflite
         #   PaddlePaddle:                   *_paddle_model
+        # KRIA xmodel
         from models.experimental import attempt_download, attempt_load  # scoped to avoid circular import
 
         super().__init__()
         w = str(weights[0] if isinstance(weights, list) else weights)
-        pt, jit, onnx, xml, engine, coreml, saved_model, pb, tflite, edgetpu, tfjs, paddle, triton = self._model_type(w)
+        pt, jit, onnx, xml, engine, coreml, saved_model, pb, tflite, edgetpu, tfjs, paddle, triton, xmodel = self._model_type(w)
         fp16 &= pt or jit or onnx or engine or triton  # FP16
-        nhwc = coreml or saved_model or pb or tflite or edgetpu  # BHWC formats (vs torch BCWH)
+        nhwc = coreml or saved_model or pb or tflite or edgetpu  or xmodel # BHWC formats (vs torch BCWH)
         stride = 32  # default stride
         cuda = torch.cuda.is_available() and device.type != "cpu"  # use CUDA
         if not (pt or triton):
@@ -673,6 +675,13 @@ class DetectMultiBackend(nn.Module):
 
             model = TritonRemoteModel(url=w)
             nhwc = model.runtime.startswith("tensorflow")
+
+        elif xmodel:
+            LOGGER.info(f"Loading {w} for KRIA xmodel Runtime inference...")
+            from models.kria import KRIA
+
+            model = KRIA(str(w), class_names=names)
+
         else:
             raise NotImplementedError(f"ERROR: {w} is not a supported format")
 

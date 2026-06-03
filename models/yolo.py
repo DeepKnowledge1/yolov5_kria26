@@ -89,7 +89,19 @@ class Detect(nn.Module):
         self.m = nn.ModuleList(nn.Conv2d(x, self.no * self.na, 1) for x in ch)  # output conv
         self.inplace = inplace  # use inplace ops (e.g. slice assignment)
 
-    def forward(self, x):
+    def forward(self, x):  # this is only used for KRIA
+        for i in range(self.nl):
+            x[i] = self.m[i](x[i])  # conv
+            bs, _, ny, nx = x[i].shape  # x(bs,255,20,20) to x(bs,3,20,20,85)
+            x[i] = (
+                x[i]
+                .view(bs, self.na, self.no, ny, nx)
+                .permute(0, 1, 3, 4, 2)
+                .contiguous()
+            )
+        return x
+
+    def forwardii(self, x):
         """Processes input through YOLOv5 layers, altering shape for detection: `x(bs, 3, ny, nx, 85)`."""
         z = []  # inference output
         for i in range(self.nl):
