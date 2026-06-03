@@ -14,7 +14,7 @@ dependencies = [
     "numpy==1.26.4",
     "matplotlib==3.8.3",
     "scikit-learn>=1.2,<1.4",
-    "scikit-image==0.22.0",
+    "scikit-image==0.25.2",
     "easydict==1.13",
     "tqdm>=4.67.1",
     "opencv-python>=4.6.0",
