@@ -1,11 +1,8 @@
+import numpy as np
 import torch
-
-
 from pynq_dpu import DpuOverlay
 
 from utils.KriaDecoder import Post_Process
-import numpy as np
-
 
 anchor_list = [
     [1.25, 1.6525, 2, 3.75, 4.125, 2.875],  # divided by 8
@@ -37,16 +34,16 @@ class KRIA(torch.nn.Module):
             np.empty(shapeOut2, dtype=np.int8, order="C"),
         ]
         self.image = self.input_data[0]
-        self.post_process = Post_Process(
-            anchors=anchor_list, nc=len(self.class_names)
-        )
+        self.post_process = Post_Process(anchors=anchor_list, nc=len(self.class_names))
 
     def forward(self, batch: torch.Tensor):
         """Make a prediction on test images.
+
         Args:
             batch: A batch of test images, with dimension (B, D, h, w).
+
         Returns:
-            score_map: A tensor with the patch level scores, with dimension (B, H, W)
+            score_map: A tensor with the patch level scores, with dimension (B, H, W).
         """
         with torch.no_grad():
             batch = batch.cpu().detach().numpy()
