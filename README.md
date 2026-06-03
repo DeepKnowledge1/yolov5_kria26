@@ -1,6 +1,5 @@
 # 🚀 YOLOv5 Deployment on KRIA KV260 with Vitis AI
 
-![YOLOv5 on KRIA KV260](kria.png)
 
 **Deploying YOLOv5 on AMD-Xilinx KRIA KV260 using Vitis AI Quantization and DPU Compilation**
 
