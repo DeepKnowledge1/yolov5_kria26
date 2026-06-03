@@ -16,7 +16,7 @@ dependencies = [
     "scikit-learn>=1.2,<1.4",
     "scikit-image==0.22.0",
     "easydict==1.13",
-    "tqdm>=4.67.1",
+    "tqdm>=4.67.3",
     "opencv-python>=4.6.0",
     "onnx>=1.15.0",
     "onnxruntime>=1.16.0",
