@@ -1,11 +1,10 @@
-
+import numpy as np
 import torch
 import torch.nn as nn
-import numpy as np
+
 from utils.general import (
     check_version,
 )
-
 
 
 class Post_Process(nn.Module):
@@ -21,21 +20,14 @@ class Post_Process(nn.Module):
         self.anchor_grid = [torch.zeros(1).to("cpu")] * self.nl  # init anchor grid
         self.stride = torch.tensor([8, 16, 32])
 
-    def _make_grid(
-        self, nx=20, ny=20, i=0, torch_1_10=check_version(torch.__version__, "1.10.0")
-    ):
+    def _make_grid(self, nx=20, ny=20, i=0, torch_1_10=check_version(torch.__version__, "1.10.0")):
         d = self.anchors[i].device
         shape = 1, self.na, ny, nx, 2  # grid shape
         y, x = torch.arange(ny, device=d), torch.arange(nx, device=d)
         yv, xv = torch.meshgrid([y, x])
 
         grid = torch.stack((xv, yv), 2).expand(shape).float()
-        anchor_grid = (
-            (self.anchors[i] * self.stride[i])
-            .view((1, self.na, 1, 1, 2))
-            .expand(shape)
-            .float()
-        )
+        anchor_grid = (self.anchors[i] * self.stride[i]).view((1, self.na, 1, 1, 2)).expand(shape).float()
 
         return grid, anchor_grid
 
