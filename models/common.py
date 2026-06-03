@@ -470,13 +470,18 @@ class DetectMultiBackend(nn.Module):
         #   TensorFlow Edge TPU:            *_edgetpu.tflite
         #   PaddlePaddle:                   *_paddle_model
         # KRIA xmodel
-        from models.experimental import attempt_download, attempt_load  # scoped to avoid circular import
+        from models.experimental import (  # scoped to avoid circular import
+            attempt_download,
+            attempt_load,
+        )
 
         super().__init__()
         w = str(weights[0] if isinstance(weights, list) else weights)
-        pt, jit, onnx, xml, engine, coreml, saved_model, pb, tflite, edgetpu, tfjs, paddle, triton, xmodel = self._model_type(w)
+        pt, jit, onnx, xml, engine, coreml, saved_model, pb, tflite, edgetpu, tfjs, paddle, triton, xmodel = (
+            self._model_type(w)
+        )
         fp16 &= pt or jit or onnx or engine or triton  # FP16
-        nhwc = coreml or saved_model or pb or tflite or edgetpu  or xmodel # BHWC formats (vs torch BCWH)
+        nhwc = coreml or saved_model or pb or tflite or edgetpu or xmodel  # BHWC formats (vs torch BCWH)
         stride = 32  # default stride
         cuda = torch.cuda.is_available() and device.type != "cpu"  # use CUDA
         if not (pt or triton):
