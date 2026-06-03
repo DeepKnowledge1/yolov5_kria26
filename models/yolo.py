@@ -51,7 +51,14 @@ from models.common import (
 )
 from models.experimental import MixConv2d
 from utils.autoanchor import check_anchor_order
-from utils.general import LOGGER, check_version, check_yaml, colorstr, make_divisible, print_args
+from utils.general import (
+    LOGGER,
+    check_version,
+    check_yaml,
+    colorstr,
+    make_divisible,
+    print_args,
+)
 from utils.plots import feature_visualization
 from utils.torch_utils import (
     fuse_conv_and_bn,
@@ -93,12 +100,7 @@ class Detect(nn.Module):
         for i in range(self.nl):
             x[i] = self.m[i](x[i])  # conv
             bs, _, ny, nx = x[i].shape  # x(bs,255,20,20) to x(bs,3,20,20,85)
-            x[i] = (
-                x[i]
-                .view(bs, self.na, self.no, ny, nx)
-                .permute(0, 1, 3, 4, 2)
-                .contiguous()
-            )
+            x[i] = x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
         return x
 
     def forwardii(self, x):
