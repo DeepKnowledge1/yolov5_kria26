@@ -1,4 +1,3 @@
-
 #Quantize and compiled a YOLOV5 with VITIS-AI
 
 # Quantize
@@ -22,8 +21,7 @@ You need to modify the '`forward`' function of `Detect class` in the yolo. py sc
             x[i] = x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
         return x
 
-
-The  SiLU function is not supported (as seen here https://docs.xilinx.com/r/en-US/ug1414-vitis-ai/Currently-Supported-Operators). You need to replace it with LeakyReLU. The specific files that need to be modified are the **common.py** and **experimental.py** files, located in yolov5/models/, which are modified as follows.
+The SiLU function is not supported (as seen here https://docs.xilinx.com/r/en-US/ug1414-vitis-ai/Currently-Supported-Operators). You need to replace it with LeakyReLU. The specific files that need to be modified are the **common.py** and **experimental.py** files, located in yolov5/models/, which are modified as follows.
 
     # old
     nn.SiLU()
@@ -36,9 +34,6 @@ The  SiLU function is not supported (as seen here https://docs.xilinx.com/r/en-U
 <font color='red'>**After these changes you have to train this modified network**</font>
 
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-
-
-
 
 Now it should be ready for quantization, create a **quant.py** file in YOLOV5 folder
 
@@ -82,54 +77,37 @@ Now it should be ready for quantization, create a **quant.py** file in YOLOV5 fo
     if __name__ == "__main__":
         args = get_parser().parse_args()
         quant(args)
+
 `
-
-
-
 
 **Quantization 1**
 with `quant_mode =  calib`
 In the terminal after activating the vitis-ai-pytorch
->>`python quant.py --quant_mode calib`
+
+> > `python quant.py --quant_mode calib`
 
 ![quan.png](./quan.png)
 
 **Generating xmodel**
 To export_xmodel, change `quant_mode = 'test'`
 
->>`python quant.py --quant_mode test`
+> > `python quant.py --quant_mode test`
 
 ![quant_test.png](./quant_test.png)
 
-As output, you will have quantize_result folder indluging all relevent files:
-
-
-
-
+As output, you will have quantize_result folder indluging all relevant files:
 
 **Compiling**
-This step is needed if you want to run the xmodel  on the device
+This step is needed if you want to run the xmodel on the device
 
 As you can see the last line of the screenshot:
 <font color='green'>**[VAIQ_NOTE]: =>Successfully convert 'DetectMultiBackend' to xmodel.(./compiled_xmodel/DetectMultiBackend_int.xmodel)**</font>
 
-
-
->>`vai_c_xir -x ./compiled_xmodel/DetectMultiBackend_int.xmodel -a /opt/vitis_ai/compiler/arch/DPUCZDX8G/KV260/arch.json -o OUTPUTPATH -n yolov5_cpu`
+> > `vai_c_xir -x ./compiled_xmodel/DetectMultiBackend_int.xmodel -a /opt/vitis_ai/compiler/arch/DPUCZDX8G/KV260/arch.json -o OUTPUTPATH -n yolov5_cpu`
 
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-
 
 **<font color='red'>**Pay attention**</font>** to whether the final DPU subgraph number is 1. If it is not 1, please check whether your model has an OP that is not supported by the DPU. When encountering an OP that is not supported by the DPU, the DPU will be divided into multiple subgraphs for execution, and will be executed by PS. After processing, it is sent to the DPU, which slows down efficiency. The generated xmodel can be used to view the network input and output structure using netron.
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
-
-
 ![subgraph.png](./subgraph.png)
-
-
-
-
-
-
-
