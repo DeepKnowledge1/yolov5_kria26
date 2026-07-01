@@ -1,6 +1,5 @@
 # 🚀 YOLOv5 Deployment on KRIA KV260 with Vitis AI
 
-
 **Deploying YOLOv5 on AMD-Xilinx KRIA KV260 using Vitis AI Quantization and DPU Compilation**
 
 ---
@@ -11,12 +10,12 @@ This repository demonstrates the complete workflow for deploying a custom-traine
 
 The deployment flow includes:
 
-* ✅ Modifying YOLOv5 for Vitis AI compatibility
-* ✅ Retraining the modified network
-* ✅ Quantizing the model using Vitis AI
-* ✅ Exporting the `.xmodel` file
-* ✅ Compiling for the KRIA DPU
-* ✅ Running real-time object detection on the KV260
+- ✅ Modifying YOLOv5 for Vitis AI compatibility
+- ✅ Retraining the modified network
+- ✅ Quantizing the model using Vitis AI
+- ✅ Exporting the `.xmodel` file
+- ✅ Compiling for the KRIA DPU
+- ✅ Running real-time object detection on the KV260
 
 ---
 
@@ -32,26 +31,25 @@ The deployment flow includes:
   <b>▶ Click the thumbnail to watch the full deployment demo</b>
 </p>
 
-
 ## 🏗️ Hardware
 
 ### Target Platform
 
-* 🧠 AMD-Xilinx KRIA KV260
-* ⚡ DPU Accelerator
-* 🎥 USB Camera / Video Stream
-* 🐧 Ubuntu + WSL Environment
+- 🧠 AMD-Xilinx KRIA KV260
+- ⚡ DPU Accelerator
+- 🎥 USB Camera / Video Stream
+- 🐧 Ubuntu + WSL Environment
 
 ---
 
 ## 🛠️ Software Requirements
 
-* Ubuntu / WSL2
-* Docker
-* Python 3.8+
-* PyTorch
-* Vitis AI v1.4.1
-* YOLOv5
+- Ubuntu / WSL2
+- Docker
+- Python 3.8+
+- PyTorch
+- Vitis AI v1.4.1
+- YOLOv5
 
 ---
 
@@ -158,13 +156,7 @@ def forward(self, x):
     for i in range(self.nl):
         x[i] = self.m[i](x[i])
         bs, _, ny, nx = x[i].shape
-        x[i] = x[i].view(
-            bs,
-            self.na,
-            self.no,
-            ny,
-            nx
-        ).permute(0,1,3,4,2).contiguous()
+        x[i] = x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
     return x
 ```
 
@@ -223,10 +215,10 @@ Compile the generated xmodel:
 
 ```bash
 vai_c_xir \
--x ./compiled_xmodel/DetectMultiBackend_int.xmodel \
--a /opt/vitis_ai/compiler/arch/DPUCZDX8G/KV260/arch.json \
--o OUTPUTPATH \
--n yolov5_kv260
+  -x ./compiled_xmodel/DetectMultiBackend_int.xmodel \
+  -a /opt/vitis_ai/compiler/arch/DPUCZDX8G/KV260/arch.json \
+  -o OUTPUTPATH \
+  -n yolov5_kv260
 ```
 
 ---
@@ -245,10 +237,10 @@ If multiple subgraphs exist:
 
 This causes:
 
-* PS execution
-* CPU/DPU switching
-* Increased latency
-* Lower FPS
+- PS execution
+- CPU/DPU switching
+- Increased latency
+- Lower FPS
 
 ---
 
@@ -262,19 +254,19 @@ netron DetectMultiBackend_int.xmodel
 
 Useful for checking:
 
-* Input tensors
-* Output tensors
-* Network structure
+- Input tensors
+- Output tensors
+- Network structure
 
 ---
 
 # 📊 Optimization Tips
 
-* Use INT8 quantization
-* Keep DPU subgraph count = 1
-* Remove unsupported operators
-* Reduce input resolution if required
-* Use YOLOv5n or YOLOv5s for maximum FPS
+- Use INT8 quantization
+- Keep DPU subgraph count = 1
+- Remove unsupported operators
+- Reduce input resolution if required
+- Use YOLOv5n or YOLOv5s for maximum FPS
 
 ---
 
@@ -282,17 +274,17 @@ Useful for checking:
 
 The repository includes a live demonstration showing:
 
-* Real-time object detection
-* DPU accelerated inference
-* YOLOv5 running on KRIA KV260
+- Real-time object detection
+- DPU accelerated inference
+- YOLOv5 running on KRIA KV260
 
 ---
 
 # 📚 References
 
-* AMD Vitis AI Documentation
-* YOLOv5 Repository
-* KRIA KV260 Vision AI Starter Kit
+- AMD Vitis AI Documentation
+- YOLOv5 Repository
+- KRIA KV260 Vision AI Starter Kit
 
 ---
 
