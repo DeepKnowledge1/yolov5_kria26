@@ -28,7 +28,7 @@ dependencies = [
     "streamlit>=1.52.2",
     "gradio>=6.3.0",
     "onnxscript>=0.6.2",
-    "pytest>=8.0.2",
+    "pytest>=9.1.1",
     "ipython>=8.39.0",
     "psutil>=7.2.2",
     "seaborn>=0.13.2",
@@ -44,7 +44,7 @@ cu121 = ["torch>=2.4.0", "torchvision>=0.27.1", "torchaudio>=2.4.0"]
 cu124 = ["torch>=2.4.0", "torchvision>=0.27.1", "torchaudio>=2.4.0"]
 
 # Dev tools bundled as an extra
-dev = ["pytest==8.0.2", "black==24.2.0", "flake8==7.0.0", "pre-commit==3.6.2"]
+dev = ["pytest==9.1.1", "black==24.2.0", "flake8==7.0.0", "pre-commit==3.6.2"]
 
 [project.scripts]
 dlod = "dlod.cli:main"
