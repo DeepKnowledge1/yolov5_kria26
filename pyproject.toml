@@ -23,7 +23,7 @@ dependencies = [
     "openvino-dev>=2024.0",
     "fastapi>=0.127.0",
     "uvicorn>=0.30.0",
-    "pydantic>=2.12.5",
+    "pydantic>=2.13.5",
     "python-multipart==0.0.20",
     "streamlit>=1.52.2",
     "gradio>=6.3.0",
